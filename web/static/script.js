@@ -39,16 +39,20 @@ uploadBox.addEventListener('click', (e) => {
 });
 
 fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length > 0) {
+    if (e.target.files && e.target.files.length > 0) {
         handleFile(e.target.files[0]);
     }
 });
 
 function handleFile(file) {
+    // Önceki hataları temizle
+    hideError();
+    
     // Dosya boyutu kontrolü (10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
         showError('Dosya boyutu çok büyük. Lütfen 10MB\'dan küçük bir dosya seçin.');
+        fileInput.value = ''; // Input'u temizle
         return;
     }
 
@@ -56,21 +60,27 @@ function handleFile(file) {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
         showError('Lütfen geçerli bir görüntü dosyası seçin (JPG, JPEG veya PNG).');
+        fileInput.value = ''; // Input'u temizle
         return;
     }
 
-    // Önizleme göster
+    // Önizleme göster ve tahmin yap
     const reader = new FileReader();
     reader.onload = (e) => {
+        // Görüntü önizlemesini ayarla
         previewImg.src = e.target.result;
         uploadBox.style.display = 'none';
         imagePreview.style.display = 'block';
         
-        // Tahmin yap
-        predictImage(file);
+        // Dosya okunduktan sonra tahmin yap
+        // FileReader'ın dosya nesnesi yerine orijinal file nesnesini kullan
+        setTimeout(() => {
+            predictImage(file);
+        }, 100); // Kısa bir gecikme ile önizlemenin yüklenmesini garantile
     };
     reader.onerror = () => {
         showError('Dosya okunamadı. Lütfen başka bir dosya deneyin.');
+        fileInput.value = ''; // Input'u temizle
     };
     reader.readAsDataURL(file);
 }
@@ -79,7 +89,13 @@ function clearImage() {
     uploadBox.style.display = 'block';
     imagePreview.style.display = 'none';
     resultsSection.style.display = 'none';
+    
+    // File input'u tamamen temizle (yeni dosya seçimine izin ver)
     fileInput.value = '';
+    
+    // Preview image'i de temizle
+    previewImg.src = '';
+    
     hideError();
     
     // Loading steps'i sıfırla
@@ -92,6 +108,12 @@ function clearImage() {
 }
 
 async function predictImage(file) {
+    // Dosya nesnesinin geçerli olduğundan emin ol
+    if (!file) {
+        showError('Dosya bulunamadı. Lütfen tekrar deneyin.');
+        return;
+    }
+
     // Loading göster
     resultsSection.style.display = 'block';
     loading.style.display = 'block';
@@ -109,9 +131,9 @@ async function predictImage(file) {
         }
     }, 500);
 
-    // FormData oluştur
+    // FormData oluştur - dosya nesnesini doğrudan kullan
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', file, file.name);
 
     try {
         // API'ye gönder
@@ -126,8 +148,8 @@ async function predictImage(file) {
         steps.forEach(step => step.classList.add('active'));
 
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Tahmin yapılırken bir hata oluştu.');
+            const errorData = await response.json().catch(() => ({ detail: 'Sunucu hatası oluştu.' }));
+            throw new Error(errorData.detail || 'Tahmin yapılırken bir hata oluştu.');
         }
 
         const results = await response.json();
@@ -139,7 +161,8 @@ async function predictImage(file) {
         
     } catch (error) {
         clearInterval(stepInterval);
-        showError(error.message);
+        console.error('Prediction error:', error);
+        showError(error.message || 'Tahmin yapılırken bir hata oluştu.');
         loading.style.display = 'none';
     }
 }
@@ -295,17 +318,10 @@ function hideError() {
     errorMessage.style.display = 'none';
 }
 
-// Sayfa yüklendiğinde
+// Sayfa yüklendiğinde - initialization
 document.addEventListener('DOMContentLoaded', () => {
-    // Dosya input için max size uyarısı
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            const file = e.target.files[0];
-            const maxSize = 10 * 1024 * 1024; // 10MB
-            if (file.size > maxSize) {
-                showError('Dosya boyutu çok büyük. Lütfen 10MB\'dan küçük bir dosya seçin.');
-                e.target.value = '';
-            }
-        }
-    });
+    // DOMContentLoaded'da ek bir event listener gerekmiyor
+    // Çünkü fileInput.addEventListener zaten yukarıda tanımlı
+    // Bu sadece initialization için kullanılabilir
+    console.log('Dermatoloji AI Analiz Sistemi hazır');
 });
