@@ -197,9 +197,26 @@ uploadBox.addEventListener('drop', (e) => {
     }
 });
 
+// Mobil cihaz tespiti
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           (window.matchMedia && window.matchMedia('(max-width: 768px)').matches);
+}
+
+// Dosya seç butonu için mobil kamera desteği
+function openFileInput() {
+    // Mobil cihazlarda kamera için capture attribute ekle
+    if (isMobileDevice()) {
+        fileInput.setAttribute('capture', 'environment');
+    } else {
+        fileInput.removeAttribute('capture');
+    }
+    fileInput.click();
+}
+
 uploadBox.addEventListener('click', (e) => {
     if (e.target === uploadBox || e.target.closest('.upload-content')) {
-        fileInput.click();
+        openFileInput();
     }
 });
 
@@ -505,7 +522,13 @@ function handleScroll() {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DermAI Dermatoloji Analiz Sistemi hazır');
     
-    // Kamera butonu kaldırıldı - uygulama kendi kendine açıyor
+    // Kamera desteğini kontrol et
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        // Kamera desteği yoksa butonu gizle veya devre dışı bırak
+        if (cameraButton) {
+            cameraButton.style.display = 'none';
+        }
+    }
     
     // Scroll event listener ekle
     let ticking = false;
