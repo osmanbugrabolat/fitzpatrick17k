@@ -1,6 +1,6 @@
 FROM python:3.10-slim
 
-# Sistem bağımlılıkları
+# Sistem bağımlılıkları ve Git LFS (model dosyaları için)
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     libsm6 \
@@ -8,7 +8,10 @@ RUN apt-get update && apt-get install -y \
     libxrender-dev \
     libgomp1 \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    git \
+    git-lfs \
+    && rm -rf /var/lib/apt/lists/* \
+    && git lfs install
 
 # Çalışma dizini
 WORKDIR /app
