@@ -143,10 +143,19 @@ body {
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid var(--border-light);
     padding: var(--space-4) 0;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 1000;
     box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base);
+    transform: translateY(0);
+}
+
+.header.hidden {
+    transform: translateY(-100%);
 }
 
 .header-inner {
@@ -229,6 +238,7 @@ body {
 .main {
     flex: 1;
     padding: var(--space-12) 0;
+    margin-top: 73px; /* Header height için padding */
 }
 
 /* ============================================
@@ -1377,6 +1387,7 @@ body {
 
     .main {
         padding: var(--space-8) 0;
+        margin-top: 85px; /* Mobilde header daha yüksek (wrap olduğu için) */
     }
 
     .hero {
@@ -1391,16 +1402,44 @@ body {
     }
 
     .upload-box {
-        padding: var(--space-12) var(--space-6);
+        padding: var(--space-8) var(--space-4);
+        border-radius: var(--radius-xl);
+    }
+
+    .upload-icon-wrapper {
+        margin-bottom: var(--space-4);
+    }
+
+    .upload-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .upload-title {
+        font-size: 1.25rem;
+        margin-bottom: var(--space-2);
+    }
+
+    .upload-text {
+        font-size: 0.9375rem;
+        margin-bottom: var(--space-1);
+    }
+
+    .upload-hint {
+        font-size: 0.8125rem;
+        margin-bottom: var(--space-6);
     }
 
     .upload-actions {
         flex-direction: column;
         width: 100%;
+        gap: var(--space-3);
     }
 
     .upload-actions .btn {
         width: 100%;
+        padding: var(--space-3) var(--space-5);
+        font-size: 0.9375rem;
     }
 
     .card-header {
@@ -1443,13 +1482,47 @@ body {
         font-size: 0.7rem;
     }
 
+    .upload-box {
+        padding: var(--space-6) var(--space-4);
+        border-radius: var(--radius-lg);
+    }
+
     .upload-icon {
-        width: 64px;
-        height: 64px;
+        width: 48px;
+        height: 48px;
     }
 
     .upload-title {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
+        margin-bottom: var(--space-1);
+    }
+
+    .upload-text {
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+
+    .upload-hint {
+        font-size: 0.75rem;
+        margin-bottom: var(--space-5);
+    }
+
+    .upload-actions {
+        gap: var(--space-2);
+    }
+
+    .upload-actions .btn {
+        padding: var(--space-3) var(--space-4);
+        font-size: 0.875rem;
+    }
+
+    .upload-actions .btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .upload-box:hover {
+        transform: none;
     }
 
     .camera-modal {

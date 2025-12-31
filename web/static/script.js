@@ -477,6 +477,30 @@ function hideError() {
     errorMessage.style.display = 'none';
 }
 
+// Header scroll davranışı
+let lastScrollTop = 0;
+let scrollThreshold = 10; // Minimum scroll mesafesi
+const header = document.querySelector('.header');
+
+function handleScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+        // Aşağı scroll - header'ı gizle
+        header.classList.add('hidden');
+    } else if (scrollTop < lastScrollTop) {
+        // Yukarı scroll - header'ı göster
+        header.classList.remove('hidden');
+    }
+    
+    // En üstteyse header'ı göster
+    if (scrollTop <= scrollThreshold) {
+        header.classList.remove('hidden');
+    }
+    
+    lastScrollTop = scrollTop;
+}
+
 // Sayfa yüklendiğinde
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DermAI Dermatoloji Analiz Sistemi hazır');
@@ -488,4 +512,16 @@ document.addEventListener('DOMContentLoaded', () => {
             cameraButton.style.display = 'none';
         }
     }
+    
+    // Scroll event listener ekle
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                handleScroll();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
 });
