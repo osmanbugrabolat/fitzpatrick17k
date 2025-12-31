@@ -31,6 +31,7 @@ venv.bak/
 .venv
 
 # PyTorch Model Files
+# *.pt (tracked with Git LFS)
 *.pth
 *.pth.tar
 *.ckpt
