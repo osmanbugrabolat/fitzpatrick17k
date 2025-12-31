@@ -505,13 +505,7 @@ function handleScroll() {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DermAI Dermatoloji Analiz Sistemi hazır');
     
-    // Kamera desteğini kontrol et
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        // Kamera desteği yoksa butonu gizle veya devre dışı bırak
-        if (cameraButton) {
-            cameraButton.style.display = 'none';
-        }
-    }
+    // Kamera butonu kaldırıldı - uygulama kendi kendine açıyor
     
     // Scroll event listener ekle
     let ticking = false;
