@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="32" cy="32" r="30" fill="url(#gradient)"/>
+  
+  <!-- Medical Cross Icon -->
+  <g transform="translate(32, 32)">
+    <!-- Horizontal line -->
+    <rect x="-10" y="-2" width="20" height="4" fill="white" rx="2"/>
+    <!-- Vertical line -->
+    <rect x="-2" y="-10" width="4" height="20" fill="white" rx="2"/>
+  </g>
+  
+  <!-- AI Symbol (small dots) -->
+  <circle cx="18" cy="18" r="2" fill="white" opacity="0.8"/>
+  <circle cx="46" cy="18" r="2" fill="white" opacity="0.8"/>
+  <circle cx="32" cy="48" r="2" fill="white" opacity="0.8"/>
+</svg>
+

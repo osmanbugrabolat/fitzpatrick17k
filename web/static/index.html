@@ -2,213 +2,388 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Dermatoloji görüntü analizi - AI destekli cilt hastalığı ve Fitzpatrick cilt tipi sınıflandırması">
-    <title>Dermatoloji AI Analiz Sistemi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="DermAI - Yapay zeka destekli 114 dermatolojik hastalık analizi ve Fitzpatrick cilt tipi sınıflandırması">
+    <meta name="theme-color" content="#2563eb">
+    
+    <title>DermAI | Yapay Zeka Destekli Dermatoloji Analizi</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="apple-touch-icon" href="/static/favicon.svg">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="header-content">
-                <div class="logo-section">
-                    <div class="logo-text">
-                        <h1>Dermatoloji AI Analiz Sistemi</h1>
-                        <p class="tagline">Yapay Zeka Destekli Cilt Hastalığı ve Cilt Tipi Analizi</p>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-inner">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 2L2 8l14 6 14-6-14-6z" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <path d="M2 22l14 6 14-6M2 16l14 6 14-6" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <circle cx="16" cy="16" r="4" fill="currentColor" opacity="0.8"/>
+                            </svg>
+                        </div>
+                        <div class="logo-text">
+                            <span class="logo-name">DermAI</span>
+                            <span class="logo-tagline">Dermatoloji AI</span>
+                        </div>
+                    </div>
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">114</span>
+                            <span class="stat-label">Hastalık Tipi</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </header>
 
-        <div class="disclaimer-banner">
-            <div class="disclaimer-content">
-                <strong>⚠️ Önemli Uyarı:</strong> Bu sistem yalnızca bilgilendirme amaçlıdır ve profesyonel tıbbi teşhis, tedavi veya tavsiye yerine geçmez. Sağlık sorunlarınız için mutlaka bir dermatoloji uzmanına başvurunuz.
-            </div>
-        </div>
-
-        <main>
-            <div class="info-section">
-                <div class="info-card">
-                    <h3>📋 Nasıl Kullanılır?</h3>
-                    <ol>
-                        <li>Analiz etmek istediğiniz dermatoloji görüntüsünü yükleyin</li>
-                        <li>Görüntü otomatik olarak analiz edilecektir</li>
-                        <li>Hastalık tahmini ve cilt tipi sonuçlarını inceleyin</li>
-                        <li>Sonuçları bir sağlık uzmanıyla paylaşın</li>
-                    </ol>
-                </div>
-                <div class="info-card">
-                    <h3>🎯 Sistem Özellikleri</h3>
-                    <ul>
-                        <li><strong>114+</strong> farklı cilt hastalığını tanıma</li>
-                        <li><strong>Fitzpatrick Scale</strong> ile cilt tipi analizi</li>
-                        <li><strong>EfficientNet-B3</strong> AI modeli</li>
-                        <li>Anında sonuç ve yüksek doğruluk</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="upload-section">
-                <div class="upload-box" id="uploadBox">
-                    <div class="upload-content">
-                        <div class="upload-icon">
-                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="17 8 12 3 7 8"></polyline>
-                                <line x1="12" y1="3" x2="12" y2="15"></line>
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Hero Section -->
+                <section class="hero">
+                    <div class="hero-content">
+                        <div class="hero-badge">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
                             </svg>
+                            <span>Multi-Task AI Model</span>
                         </div>
-                        <h3>Görüntü Yükleyin</h3>
-                        <p>Analiz etmek istediğiniz görüntüyü buraya sürükleyip bırakın veya seçmek için tıklayın</p>
-                        <p class="file-info">Desteklenen formatlar: JPG, PNG, JPEG (Maksimum 10MB)</p>
-                        <input type="file" id="fileInput" accept="image/jpeg,image/jpg,image/png" hidden>
-                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
-                            <span>📁</span> Dosya Seç
-                        </button>
+                        <h1 class="hero-title">
+                            <span class="gradient-text">Yapay Zeka</span> ile<br>
+                            Dermatoloji Analizi
+                        </h1>
+                        <p class="hero-subtitle">
+                            114 farklı dermatolojik hastalığı Fitzpatrick skalasına göre analiz eden 
+                            gelişmiş AI teknolojisi ile cilt sağlığınız hakkında anında bilgi edinin.
+                        </p>
+                        <div class="hero-features">
+                            <div class="feature-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                                <span>114 Hastalık Tipi</span>
+                            </div>
+                            <div class="feature-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                                </svg>
+                                <span>Fitzpatrick Skalası</span>
+                            </div>
+                            <div class="feature-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                <span>Anında Sonuç</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Medical Disclaimer -->
+                <div class="disclaimer">
+                    <div class="disclaimer-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <div class="disclaimer-content">
+                        <h4>Tıbbi Uyarı</h4>
+                        <p>Bu sistem yalnızca bilgilendirme amaçlıdır ve tıbbi teşhis, tedavi veya öneri niteliği taşımaz. 
+                        Kesin teşhis ve tedavi için mutlaka bir dermatoloji uzmanına başvurunuz.</p>
                     </div>
                 </div>
 
-                <div class="image-preview" id="imagePreview" style="display: none;">
-                    <div class="preview-header">
-                        <h4>Yüklenen Görüntü</h4>
-                        <button class="btn-close" onclick="clearImage()" aria-label="Kapat">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="preview-image-container">
-                        <img id="previewImg" alt="Yüklenen görüntü önizlemesi">
-                    </div>
-                </div>
-            </div>
-
-            <div class="results-section" id="resultsSection" style="display: none;">
-                <div class="loading" id="loading">
-                    <div class="loading-content">
-                        <div class="spinner-container">
-                            <div class="spinner"></div>
-                        </div>
-                        <h3>Analiz Yapılıyor</h3>
-                        <p>Görüntünüz yapay zeka modeli tarafından işleniyor...</p>
-                        <div class="loading-steps">
-                            <div class="step active">
-                                <span class="step-number">1</span>
-                                <span class="step-text">Görüntü yüklendi</span>
+                <!-- Upload Section -->
+                <section class="upload-section">
+                    <div class="upload-box" id="uploadBox">
+                        <div class="upload-background"></div>
+                        <div class="upload-content">
+                            <div class="upload-icon-wrapper">
+                                <div class="upload-icon">
+                                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="8" y="16" width="48" height="40" rx="4"/>
+                                        <path d="M20 16l-4-4-8 8m44-4l4-4-8-8"/>
+                                        <line x1="32" y1="8" x2="32" y2="32"/>
+                                        <circle cx="24" cy="44" r="3"/>
+                                        <path d="M48 44L36 32l-8 8"/>
+                                    </svg>
+                                </div>
                             </div>
-                            <div class="step active">
-                                <span class="step-number">2</span>
-                                <span class="step-text">Ön işleme yapılıyor</span>
-                            </div>
-                            <div class="step">
-                                <span class="step-number">3</span>
-                                <span class="step-text">AI analizi çalışıyor</span>
-                            </div>
-                            <div class="step">
-                                <span class="step-number">4</span>
-                                <span class="step-text">Sonuçlar hazırlanıyor</span>
+                            <h2 class="upload-title">Görüntü Yükleyin</h2>
+                            <p class="upload-text">Dosyayı sürükleyip bırakın veya aşağıdaki butonları kullanın</p>
+                            <p class="upload-hint">JPG, PNG, JPEG · Maksimum 10MB</p>
+                            
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                            
+                            <div class="upload-actions">
+                                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                    <span>Dosya Seç</span>
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="cameraButton" onclick="openCamera()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                        <circle cx="12" cy="13" r="4"/>
+                                    </svg>
+                                    <span>Kamera ile Çek</span>
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="results-content" id="resultsContent">
-                    <!-- Hastalık Tahmini -->
-                    <div class="result-card disease-card">
-                        <div class="card-header">
-                            <div class="card-icon">🎯</div>
-                            <div>
-                                <h2>Hastalık Tahmini</h2>
-                                <p class="card-subtitle">En olası cilt hastalığı tanıları</p>
+                    <!-- Camera Modal -->
+                    <div class="camera-modal" id="cameraModal" style="display: none;">
+                        <div class="camera-modal-content">
+                            <div class="camera-modal-header">
+                                <h3>Kamera ile Çek</h3>
+                                <button type="button" class="btn-close-modal" onclick="closeCamera()">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="camera-viewport">
+                                <video id="cameraVideo" autoplay playsinline></video>
+                                <canvas id="cameraCanvas" style="display: none;"></canvas>
+                                <div class="camera-overlay">
+                                    <div class="camera-guide"></div>
+                                </div>
+                            </div>
+                            <div class="camera-controls">
+                                <button type="button" class="btn-capture" id="captureButton" onclick="capturePhoto()">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10"/>
+                                    </svg>
+                                </button>
+                                <button type="button" class="btn-switch-camera" id="switchCameraButton" onclick="switchCamera()" style="display: none;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                        
-                        <div class="top-prediction" id="topDisease">
-                            <div class="prediction-badge">En Olası Tanı</div>
-                            <div class="prediction-label" id="topDiseaseLabel">-</div>
-                            <div class="prediction-confidence-container">
-                                <span class="confidence-label">Güven Skoru</span>
-                                <div class="prediction-confidence" id="topDiseaseConfidence">-</div>
-                            </div>
-                        </div>
-
-                        <div class="section-divider">
-                            <span>Diğer Olası Tanılar</span>
-                        </div>
-
-                        <div class="top-k-list" id="diseaseTopK"></div>
                     </div>
 
-                    <!-- Fitzpatrick Scale -->
-                    <div class="result-card fitzpatrick-card">
-                        <div class="card-header">
-                            <div class="card-icon">🌍</div>
-                            <div>
-                                <h2>Fitzpatrick Cilt Tipi</h2>
-                                <p class="card-subtitle">Cilt fototip analizi (I-VI)</p>
+                    <!-- Image Preview -->
+                    <div class="preview" id="imagePreview" style="display: none;">
+                        <div class="preview-header">
+                            <div class="preview-header-left">
+                                <div class="preview-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="preview-title">Yüklenen Görüntü</h3>
+                                    <p class="preview-subtitle">Analiz için hazır</p>
+                                </div>
                             </div>
+                            <button type="button" class="btn-close" onclick="clearImage()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
                         </div>
-                        
-                        <div class="top-prediction fitzpatrick-prediction" id="topFitzpatrick">
-                            <div class="prediction-badge">Tespit Edilen Cilt Tipi</div>
-                            <div class="fitzpatrick-display">
-                                <div class="fitzpatrick-scale-badge" id="fitzpatrickScaleBadge">-</div>
-                                <div class="prediction-label" id="topFitzpatrickLabel">-</div>
-                            </div>
-                            <div class="prediction-confidence-container">
-                                <span class="confidence-label">Güven Skoru</span>
-                                <div class="prediction-confidence" id="topFitzpatrickConfidence">-</div>
-                            </div>
-                        </div>
-
-                        <div class="section-divider">
-                            <span>Tüm Cilt Tiplerinin Dağılımı</span>
-                        </div>
-
-                        <div class="scale-chart" id="fitzpatrickChart"></div>
-
-                        <div class="fitzpatrick-info">
-                            <p><strong>Fitzpatrick Skalası Nedir?</strong></p>
-                            <p>Güneşe karşı cildin reaksiyonunu ölçen 6 kategorili bir sistemdir (Tip I-VI). Tip I en açık, Tip VI en koyu cilt tonunu ifade eder.</p>
+                        <div class="preview-body">
+                            <img id="previewImg" alt="Preview">
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="results-footer">
-                    <div class="footer-note">
-                        <p><strong>Sonraki Adımlar:</strong></p>
-                        <p>Bu sonuçlar bilgilendirme amaçlıdır. Kesin tanı ve tedavi için mutlaka bir dermatoloji uzmanına başvurunuz. Sonuçları doktorunuzla paylaşabilirsiniz.</p>
+                <!-- Results Section -->
+                <section class="results" id="resultsSection" style="display: none;">
+                    <!-- Loading State -->
+                    <div class="loading-card" id="loading">
+                        <div class="loading-animation">
+                            <div class="loading-spinner"></div>
+                            <div class="loading-rings">
+                                <div class="ring ring-1"></div>
+                                <div class="ring ring-2"></div>
+                                <div class="ring ring-3"></div>
+                            </div>
+                        </div>
+                        <h3 class="loading-title">AI Analizi Yapılıyor</h3>
+                        <p class="loading-text">Görüntünüz 114 hastalık tipi ve Fitzpatrick skalasına göre analiz ediliyor...</p>
+                        <div class="progress-steps">
+                            <div class="progress-step active" data-step="1">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                </div>
+                                <span class="step-label">Yükleme</span>
+                            </div>
+                            <div class="progress-step active" data-step="2">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    </svg>
+                                </div>
+                                <span class="step-label">İşleme</span>
+                            </div>
+                            <div class="progress-step" data-step="3">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                    </svg>
+                                </div>
+                                <span class="step-label">Analiz</span>
+                            </div>
+                            <div class="progress-step" data-step="4">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="step-label">Sonuç</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="error-message" id="errorMessage" style="display: none;">
-                <div class="error-icon">⚠️</div>
-                <div class="error-content">
-                    <h4>Hata Oluştu</h4>
-                    <p id="errorText"></p>
+                    <!-- Results Content -->
+                    <div class="results-content" id="resultsContent">
+                        <div class="results-header">
+                            <h2 class="results-title">Analiz Sonuçları</h2>
+                            <p class="results-subtitle">AI modeli tarafından üretilen tahminler</p>
+                        </div>
+
+                        <div class="results-grid">
+                            <!-- Disease Prediction Card -->
+                            <div class="result-card disease-card">
+                                <div class="card-header">
+                                    <div class="card-header-icon disease-icon">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                                            <path d="M12 2.69v6.62"/>
+                                        </svg>
+                                    </div>
+                                    <div class="card-header-text">
+                                        <h3 class="card-title">Hastalık Tahmini</h3>
+                                        <p class="card-description">En olası dermatolojik tanılar</p>
+                                    </div>
+                                </div>
+
+                                <div class="prediction-hero" id="topDisease">
+                                    <div class="prediction-badge">En Olası Tanı</div>
+                                    <h4 class="prediction-label" id="topDiseaseLabel">-</h4>
+                                    <div class="prediction-confidence">
+                                        <span class="confidence-label">Güven Skoru</span>
+                                        <span class="confidence-value" id="topDiseaseConfidence">-</span>
+                                    </div>
+                                </div>
+
+                                <div class="card-divider">
+                                    <span>Diğer Olası Tanılar</span>
+                                </div>
+
+                                <div class="prediction-list" id="diseaseTopK"></div>
+                            </div>
+
+                            <!-- Fitzpatrick Scale Card -->
+                            <div class="result-card fitzpatrick-card">
+                                <div class="card-header">
+                                    <div class="card-header-icon fitzpatrick-icon">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <path d="M12 6v6l4 2"/>
+                                            <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                    <div class="card-header-text">
+                                        <h3 class="card-title">Fitzpatrick Cilt Tipi</h3>
+                                        <p class="card-description">Cilt tonu sınıflandırması</p>
+                                    </div>
+                                </div>
+
+                                <div class="prediction-hero fitzpatrick-hero" id="topFitzpatrick">
+                                    <div class="prediction-badge">Tespit Edilen Tip</div>
+                                    <div class="fitzpatrick-badge" id="fitzpatrickScaleBadge">-</div>
+                                    <h4 class="prediction-label" id="topFitzpatrickLabel">-</h4>
+                                    <div class="prediction-confidence">
+                                        <span class="confidence-label">Güven Skoru</span>
+                                        <span class="confidence-value" id="topFitzpatrickConfidence">-</span>
+                                    </div>
+                                </div>
+
+                                <div class="card-divider">
+                                    <span>Tüm Skala Dağılımı</span>
+                                </div>
+
+                                <div class="scale-list" id="fitzpatrickChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Error Message -->
+                <div class="error-card" id="errorMessage" style="display: none;">
+                    <div class="error-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <div class="error-content">
+                        <h4 class="error-title">Hata Oluştu</h4>
+                        <p class="error-text" id="errorText"></p>
+                    </div>
                 </div>
             </div>
         </main>
 
-        <footer>
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Dermatoloji AI Analiz Sistemi</h4>
-                    <p>Yapay zeka destekli dermatoloji görüntü analiz platformu</p>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <div class="footer-logo">
+                            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 2L2 8l14 6 14-6-14-6z" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <path d="M2 22l14 6 14-6M2 16l14 6 14-6" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <circle cx="16" cy="16" r="4" fill="currentColor" opacity="0.8"/>
+                            </svg>
+                        </div>
+                        <div class="footer-brand-text">
+                            <span class="footer-name">DermAI</span>
+                            <span class="footer-tagline">Dermatoloji Yapay Zeka Platformu</span>
+                        </div>
+                    </div>
+                    <div class="footer-info">
+                        <p class="footer-copyright">&copy; <time datetime="2025">2025</time> DermAI. Tüm hakları saklıdır.</p>
+                        <p class="footer-note">Bu platform bilgilendirme amaçlıdır. Tıbbi teşhis için doktorunuza başvurun.</p>
+                    </div>
                 </div>
-                <div class="footer-section">
-                    <h4>Teknoloji</h4>
-                    <p>EfficientNet-B3 | PyTorch | FastAPI</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Önemli Not</h4>
-                    <p>Bu sistem tıbbi teşhis amaçlı kullanılmamalıdır. Profesyonel tıbbi görüş almak için doktorunuza başvurun.</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Dermatoloji AI Analiz Sistemi. Tüm hakları saklıdır.</p>
             </div>
         </footer>
     </div>

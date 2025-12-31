@@ -8,6 +8,171 @@ const loading = document.getElementById('loading');
 const resultsContent = document.getElementById('resultsContent');
 const errorMessage = document.getElementById('errorMessage');
 const errorText = document.getElementById('errorText');
+const cameraButton = document.getElementById('cameraButton');
+const cameraModal = document.getElementById('cameraModal');
+const cameraVideo = document.getElementById('cameraVideo');
+const cameraCanvas = document.getElementById('cameraCanvas');
+
+// Kamera için değişkenler
+let stream = null;
+let facingMode = 'environment'; // 'environment' arka kamera, 'user' ön kamera
+
+// Görüntüyü düzelt (mobil cihazlarda orientasyon sorunlarını çözmek için)
+function fixImageOrientation(file, callback) {
+    const img = new Image();
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            ctx.drawImage(img, 0, 0);
+            
+            canvas.toBlob(function(blob) {
+                if (blob) {
+                    const fixedFile = new File([blob], file.name, { 
+                        type: file.type, 
+                        lastModified: Date.now() 
+                    });
+                    callback(fixedFile);
+                } else {
+                    callback(file);
+                }
+            }, file.type, 0.92);
+        };
+        
+        img.onerror = function() {
+            callback(file);
+        };
+        
+        img.src = e.target.result;
+    };
+    
+    reader.onerror = function() {
+        callback(file);
+    };
+    
+    reader.readAsDataURL(file);
+}
+
+// Kamera açma fonksiyonu
+async function openCamera() {
+    try {
+        // Kamera erişim izni iste
+        const constraints = {
+            video: {
+                facingMode: facingMode,
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
+            }
+        };
+
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        cameraVideo.srcObject = stream;
+        cameraModal.style.display = 'flex';
+        
+        // Kamera değiştirme butonunu göster (çoklu kamera varsa)
+        if (navigator.mediaDevices.enumerateDevices) {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(device => device.kind === 'videoinput');
+            if (videoDevices.length > 1) {
+                document.getElementById('switchCameraButton').style.display = 'flex';
+            }
+        }
+    } catch (error) {
+        console.error('Kamera hatası:', error);
+        if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+            showError('Kamera erişim izni verilmedi. Lütfen tarayıcı ayarlarından izin verin.');
+        } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+            showError('Kamera bulunamadı. Lütfen cihazınızda kamera olduğundan emin olun.');
+        } else {
+            showError('Kamera açılırken bir hata oluştu: ' + error.message);
+        }
+    }
+}
+
+// Kamera kapatma fonksiyonu
+function closeCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+    }
+    cameraModal.style.display = 'none';
+    cameraVideo.srcObject = null;
+}
+
+// Kamerayı değiştir (ön/arka)
+async function switchCamera() {
+    facingMode = facingMode === 'environment' ? 'user' : 'environment';
+    
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+    
+    try {
+        const constraints = {
+            video: {
+                facingMode: facingMode,
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
+            }
+        };
+        
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        cameraVideo.srcObject = stream;
+    } catch (error) {
+        console.error('Kamera değiştirme hatası:', error);
+        showError('Kamera değiştirilemedi.');
+    }
+}
+
+// Fotoğraf çekme fonksiyonu
+function capturePhoto() {
+    const video = cameraVideo;
+    const canvas = cameraCanvas;
+    const ctx = canvas.getContext('2d');
+    
+    // Canvas boyutlarını video boyutlarına ayarla
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    
+    // Video'dan görüntüyü canvas'a çiz
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Canvas'ı blob'a çevir
+    canvas.toBlob(function(blob) {
+        if (blob) {
+            const file = new File([blob], 'camera-capture.jpg', { 
+                type: 'image/jpeg',
+                lastModified: Date.now() 
+            });
+            
+            // Kamerayı kapat
+            closeCamera();
+            
+            // Dosyayı işle
+            handleFile(file);
+        }
+    }, 'image/jpeg', 0.92);
+}
+
+// Modal dışına tıklanınca kapat
+cameraModal.addEventListener('click', function(e) {
+    if (e.target === cameraModal) {
+        closeCamera();
+    }
+});
+
+// ESC tuşu ile modal'ı kapat
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && cameraModal.style.display === 'flex') {
+        closeCamera();
+    }
+});
 
 // Drag and drop
 uploadBox.addEventListener('dragover', (e) => {
@@ -45,14 +210,13 @@ fileInput.addEventListener('change', (e) => {
 });
 
 function handleFile(file) {
-    // Önceki hataları temizle
     hideError();
     
     // Dosya boyutu kontrolü (10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
         showError('Dosya boyutu çok büyük. Lütfen 10MB\'dan küçük bir dosya seçin.');
-        fileInput.value = ''; // Input'u temizle
+        fileInput.value = '';
         return;
     }
 
@@ -60,27 +224,30 @@ function handleFile(file) {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
         showError('Lütfen geçerli bir görüntü dosyası seçin (JPG, JPEG veya PNG).');
-        fileInput.value = ''; // Input'u temizle
+        fileInput.value = '';
         return;
     }
 
-    // Önizleme göster ve tahmin yap
+    // Mobil cihazlarda görüntüyü düzelt
+    fixImageOrientation(file, (fixedFile) => {
+        processImageFile(fixedFile);
+    });
+}
+
+function processImageFile(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-        // Görüntü önizlemesini ayarla
         previewImg.src = e.target.result;
         uploadBox.style.display = 'none';
         imagePreview.style.display = 'block';
         
-        // Dosya okunduktan sonra tahmin yap
-        // FileReader'ın dosya nesnesi yerine orijinal file nesnesini kullan
         setTimeout(() => {
             predictImage(file);
-        }, 100); // Kısa bir gecikme ile önizlemenin yüklenmesini garantile
+        }, 100);
     };
     reader.onerror = () => {
         showError('Dosya okunamadı. Lütfen başka bir dosya deneyin.');
-        fileInput.value = ''; // Input'u temizle
+        fileInput.value = '';
     };
     reader.readAsDataURL(file);
 }
@@ -90,16 +257,13 @@ function clearImage() {
     imagePreview.style.display = 'none';
     resultsSection.style.display = 'none';
     
-    // File input'u tamamen temizle (yeni dosya seçimine izin ver)
     fileInput.value = '';
-    
-    // Preview image'i de temizle
     previewImg.src = '';
     
     hideError();
     
     // Loading steps'i sıfırla
-    const steps = document.querySelectorAll('.step');
+    const steps = document.querySelectorAll('.progress-step');
     steps.forEach((step, index) => {
         if (index > 1) {
             step.classList.remove('active');
@@ -108,7 +272,6 @@ function clearImage() {
 }
 
 async function predictImage(file) {
-    // Dosya nesnesinin geçerli olduğundan emin ol
     if (!file) {
         showError('Dosya bulunamadı. Lütfen tekrar deneyin.');
         return;
@@ -121,7 +284,7 @@ async function predictImage(file) {
     hideError();
 
     // Loading steps animasyonu
-    const steps = document.querySelectorAll('.step');
+    const steps = document.querySelectorAll('.progress-step');
     let currentStep = 1;
     
     const stepInterval = setInterval(() => {
@@ -131,12 +294,11 @@ async function predictImage(file) {
         }
     }, 500);
 
-    // FormData oluştur - dosya nesnesini doğrudan kullan
+    // FormData oluştur
     const formData = new FormData();
     formData.append('file', file, file.name);
 
     try {
-        // API'ye gönder
         const response = await fetch('/predict', {
             method: 'POST',
             body: formData
@@ -154,7 +316,6 @@ async function predictImage(file) {
 
         const results = await response.json();
         
-        // Kısa bir gecikme sonra sonuçları göster (animasyon için)
         setTimeout(() => {
             displayResults(results);
         }, 300);
@@ -183,7 +344,7 @@ function displayResults(results) {
         labelElement.textContent = formatLabel(topDisease.label);
         confidenceElement.textContent = `${topDisease.confidence}%`;
         
-        // Animasyon için
+        // Animasyon
         requestAnimationFrame(() => {
             confidenceElement.style.transform = 'scale(1.1)';
             setTimeout(() => {
@@ -294,7 +455,6 @@ function displayResults(results) {
 }
 
 function formatLabel(label) {
-    // Label'ı daha okunabilir hale getir
     return label
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -308,7 +468,6 @@ function showError(message) {
     errorMessage.style.display = 'flex';
     errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     
-    // Otomatik gizleme (10 saniye sonra)
     setTimeout(() => {
         hideError();
     }, 10000);
@@ -318,10 +477,15 @@ function hideError() {
     errorMessage.style.display = 'none';
 }
 
-// Sayfa yüklendiğinde - initialization
+// Sayfa yüklendiğinde
 document.addEventListener('DOMContentLoaded', () => {
-    // DOMContentLoaded'da ek bir event listener gerekmiyor
-    // Çünkü fileInput.addEventListener zaten yukarıda tanımlı
-    // Bu sadece initialization için kullanılabilir
-    console.log('Dermatoloji AI Analiz Sistemi hazır');
+    console.log('DermAI Dermatoloji Analiz Sistemi hazır');
+    
+    // Kamera desteğini kontrol et
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        // Kamera desteği yoksa butonu gizle veya devre dışı bırak
+        if (cameraButton) {
+            cameraButton.style.display = 'none';
+        }
+    }
 });
