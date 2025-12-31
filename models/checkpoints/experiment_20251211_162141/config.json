@@ -1,0 +1,10 @@
+{
+  "backbone": "efficientnet_b3",
+  "num_disease_classes": 114,
+  "num_fitzpatrick_classes": 7,
+  "batch_size": 24,
+  "num_epochs": 50,
+  "learning_rate": 0.0001,
+  "disease_loss_weight": 1.0,
+  "fitzpatrick_loss_weight": 0.5
+}

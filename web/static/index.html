@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dermatoloji görüntü analizi - AI destekli cilt hastalığı ve Fitzpatrick cilt tipi sınıflandırması">
+    <title>Dermatoloji AI Analiz Sistemi</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-text">
+                        <h1>Dermatoloji AI Analiz Sistemi</h1>
+                        <p class="tagline">Yapay Zeka Destekli Cilt Hastalığı ve Cilt Tipi Analizi</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="disclaimer-banner">
+            <div class="disclaimer-content">
+                <strong>⚠️ Önemli Uyarı:</strong> Bu sistem yalnızca bilgilendirme amaçlıdır ve profesyonel tıbbi teşhis, tedavi veya tavsiye yerine geçmez. Sağlık sorunlarınız için mutlaka bir dermatoloji uzmanına başvurunuz.
+            </div>
+        </div>
+
+        <main>
+            <div class="info-section">
+                <div class="info-card">
+                    <h3>📋 Nasıl Kullanılır?</h3>
+                    <ol>
+                        <li>Analiz etmek istediğiniz dermatoloji görüntüsünü yükleyin</li>
+                        <li>Görüntü otomatik olarak analiz edilecektir</li>
+                        <li>Hastalık tahmini ve cilt tipi sonuçlarını inceleyin</li>
+                        <li>Sonuçları bir sağlık uzmanıyla paylaşın</li>
+                    </ol>
+                </div>
+                <div class="info-card">
+                    <h3>🎯 Sistem Özellikleri</h3>
+                    <ul>
+                        <li><strong>114+</strong> farklı cilt hastalığını tanıma</li>
+                        <li><strong>Fitzpatrick Scale</strong> ile cilt tipi analizi</li>
+                        <li><strong>EfficientNet-B3</strong> AI modeli</li>
+                        <li>Anında sonuç ve yüksek doğruluk</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="upload-section">
+                <div class="upload-box" id="uploadBox">
+                    <div class="upload-content">
+                        <div class="upload-icon">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <h3>Görüntü Yükleyin</h3>
+                        <p>Analiz etmek istediğiniz görüntüyü buraya sürükleyip bırakın veya seçmek için tıklayın</p>
+                        <p class="file-info">Desteklenen formatlar: JPG, PNG, JPEG (Maksimum 10MB)</p>
+                        <input type="file" id="fileInput" accept="image/jpeg,image/jpg,image/png" hidden>
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                            <span>📁</span> Dosya Seç
+                        </button>
+                    </div>
+                </div>
+
+                <div class="image-preview" id="imagePreview" style="display: none;">
+                    <div class="preview-header">
+                        <h4>Yüklenen Görüntü</h4>
+                        <button class="btn-close" onclick="clearImage()" aria-label="Kapat">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="preview-image-container">
+                        <img id="previewImg" alt="Yüklenen görüntü önizlemesi">
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="loading" id="loading">
+                    <div class="loading-content">
+                        <div class="spinner-container">
+                            <div class="spinner"></div>
+                        </div>
+                        <h3>Analiz Yapılıyor</h3>
+                        <p>Görüntünüz yapay zeka modeli tarafından işleniyor...</p>
+                        <div class="loading-steps">
+                            <div class="step active">
+                                <span class="step-number">1</span>
+                                <span class="step-text">Görüntü yüklendi</span>
+                            </div>
+                            <div class="step active">
+                                <span class="step-number">2</span>
+                                <span class="step-text">Ön işleme yapılıyor</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <span class="step-text">AI analizi çalışıyor</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">4</span>
+                                <span class="step-text">Sonuçlar hazırlanıyor</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-content" id="resultsContent">
+                    <!-- Hastalık Tahmini -->
+                    <div class="result-card disease-card">
+                        <div class="card-header">
+                            <div class="card-icon">🎯</div>
+                            <div>
+                                <h2>Hastalık Tahmini</h2>
+                                <p class="card-subtitle">En olası cilt hastalığı tanıları</p>
+                            </div>
+                        </div>
+                        
+                        <div class="top-prediction" id="topDisease">
+                            <div class="prediction-badge">En Olası Tanı</div>
+                            <div class="prediction-label" id="topDiseaseLabel">-</div>
+                            <div class="prediction-confidence-container">
+                                <span class="confidence-label">Güven Skoru</span>
+                                <div class="prediction-confidence" id="topDiseaseConfidence">-</div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider">
+                            <span>Diğer Olası Tanılar</span>
+                        </div>
+
+                        <div class="top-k-list" id="diseaseTopK"></div>
+                    </div>
+
+                    <!-- Fitzpatrick Scale -->
+                    <div class="result-card fitzpatrick-card">
+                        <div class="card-header">
+                            <div class="card-icon">🌍</div>
+                            <div>
+                                <h2>Fitzpatrick Cilt Tipi</h2>
+                                <p class="card-subtitle">Cilt fototip analizi (I-VI)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="top-prediction fitzpatrick-prediction" id="topFitzpatrick">
+                            <div class="prediction-badge">Tespit Edilen Cilt Tipi</div>
+                            <div class="fitzpatrick-display">
+                                <div class="fitzpatrick-scale-badge" id="fitzpatrickScaleBadge">-</div>
+                                <div class="prediction-label" id="topFitzpatrickLabel">-</div>
+                            </div>
+                            <div class="prediction-confidence-container">
+                                <span class="confidence-label">Güven Skoru</span>
+                                <div class="prediction-confidence" id="topFitzpatrickConfidence">-</div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider">
+                            <span>Tüm Cilt Tiplerinin Dağılımı</span>
+                        </div>
+
+                        <div class="scale-chart" id="fitzpatrickChart"></div>
+
+                        <div class="fitzpatrick-info">
+                            <p><strong>Fitzpatrick Skalası Nedir?</strong></p>
+                            <p>Güneşe karşı cildin reaksiyonunu ölçen 6 kategorili bir sistemdir (Tip I-VI). Tip I en açık, Tip VI en koyu cilt tonunu ifade eder.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-footer">
+                    <div class="footer-note">
+                        <p><strong>Sonraki Adımlar:</strong></p>
+                        <p>Bu sonuçlar bilgilendirme amaçlıdır. Kesin tanı ve tedavi için mutlaka bir dermatoloji uzmanına başvurunuz. Sonuçları doktorunuzla paylaşabilirsiniz.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="error-message" id="errorMessage" style="display: none;">
+                <div class="error-icon">⚠️</div>
+                <div class="error-content">
+                    <h4>Hata Oluştu</h4>
+                    <p id="errorText"></p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Dermatoloji AI Analiz Sistemi</h4>
+                    <p>Yapay zeka destekli dermatoloji görüntü analiz platformu</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Teknoloji</h4>
+                    <p>EfficientNet-B3 | PyTorch | FastAPI</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Önemli Not</h4>
+                    <p>Bu sistem tıbbi teşhis amaçlı kullanılmamalıdır. Profesyonel tıbbi görüş almak için doktorunuza başvurun.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Dermatoloji AI Analiz Sistemi. Tüm hakları saklıdır.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
